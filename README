@@ -1,0 +1,9 @@
+以下のコマンドで起動します。
+
+$ perl convert.pl <Seleneseファイル名>
+
+[手順]
+
+1. Selenium IDEでテストケースをHTML出力したもの(Selenese)と
+   同じフォーマットのファイルを用意する。
+2. convert.plでHTMLをPerlスクリプトに変換する。
