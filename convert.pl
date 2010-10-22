@@ -5,6 +5,7 @@ use strict;
 use warnings;
 use HTML::TreeBuilder;
 use Text::MicroTemplate qw/:all/;
+use FindBin;
 
 my %command_map = (
     open => {
@@ -115,7 +116,7 @@ $tree = $tree->delete;
 
 my @args = ( $base_url, \@sentences );
 
-open my $io, '<', 'test.mt' or die $!;
+open my $io, '<', "$FindBin::Bin/test.mt" or die $!;
 my $template = join '', <$io>;
 close $io;
 my $renderer = build_mt($template);
