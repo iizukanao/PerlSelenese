@@ -10,7 +10,7 @@ use utf8;
 my $sel = Test::WWW::Selenium->new( host => "localhost",
                                     port => 4444,
                                     browser => "*firefox",
-                                    browser_url => "" );
+                                    browser_url => "http://www.google.co.jp/" );
 
 $sel->open_ok("/");
 $sel->title_is("Google");
