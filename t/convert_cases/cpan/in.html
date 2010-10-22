@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head profile="http://selenium-ide.openqa.org/profiles/test-case">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<link rel="selenium.base" href="" />
+<title>cpan</title>
+</head>
+<body>
+<table cellpadding="1" cellspacing="1" border="1">
+<thead>
+<tr><td rowspan="1" colspan="3">cpan</td></tr>
+</thead><tbody>
+<tr>
+	<td>open</td>
+	<td>/</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>Google</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='Google 検索' and @type='button']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>q</td>
+	<td>cpan</td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>cpan - Google 検索</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//div[@id='ires']/ol/li[1]/h3/a/em</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>CPAN</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=Perl modules</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>CPAN/modules</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>link=CPAN Search</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>The CPAN Search Site - search.cpan.org</td>
+	<td></td>
+</tr>
+<tr>
+	<td>type</td>
+	<td>query</td>
+	<td>Test::More</td>
+</tr>
+<tr>
+	<td>select</td>
+	<td>mode</td>
+	<td>label=Modules</td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//input[@value='CPAN Search']</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>The CPAN Search Site - search.cpan.org</td>
+	<td></td>
+</tr>
+<tr>
+	<td>click</td>
+	<td>//body[@id='cpansearch']/h2[1]/a/b</td>
+	<td></td>
+</tr>
+<tr>
+	<td>waitForPageToLoad</td>
+	<td>30000</td>
+	<td></td>
+</tr>
+<tr>
+	<td>assertTitle</td>
+	<td>exact:Test::More - search.cpan.org</td>
+	<td></td>
+</tr>
+<tr>
+	<td>verifyTextPresent</td>
+	<td>Test::More</td>
+	<td></td>
+</tr>
+
+</tbody></table>
+</body>
+</html>
