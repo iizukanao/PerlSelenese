@@ -1,7 +1,7 @@
 use Test::Base;
 use FindBin;
 
-plan tests => 1;
+plan tests => 2;
 
 chdir("$FindBin::Bin/../");
 
