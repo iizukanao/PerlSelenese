@@ -19,7 +19,7 @@ foreach my $dir (@dirs) {
     open $io, '<', "t/convert_cases/$dir/out.pl" or die $!;
     my $expected = join('', <$io>);
     close $io;
-    is( $got, $expected, 'output is same' );
+    is( $got, $expected, 'output precisely' );
 }
 
 unlink $tmpfile;
