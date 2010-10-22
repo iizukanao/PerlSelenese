@@ -11,58 +11,77 @@ use Data::Dumper;
 my %command_map = (
     open => {
         func => 'open_ok',
+        args => 1,
     },
     assertTitle => {
         func => 'title_is',
+        args => 1,
     },
     verifyTitle => {
         func => 'title_is',
+        args => 1,
     },
     type => {
         func => 'type_ok',
+        args => 2,
     },
     click => {
         func => 'click_ok',
+        args => 1,
+    },
+    select => {
+        func => 'select_ok',
+        args => 2,
     },
     clickAndWait => {
         func => [
             {
                 func => 'click_ok',
+                args => 1,
             },
             {
                 func => 'wait_for_page_to_load_ok',
-                args => [ 30000 ],
+                force_args => [ 30000 ],
             },
         ],
     },
     waitForPageToLoad => {
         func   => 'wait_for_page_to_load_ok',
+        args => 1,
     },
     verifyTextPresent => {
         func => 'is_text_present_ok',
+        args => 1,
     },
     assertTextPresent => {
         func => 'is_text_present_ok',
+        args => 1,
     },
     assertElementPresent => {
         func => 'is_element_present_ok',
+        args => 1,
     },
     verifyElementPresent => {
         func => 'is_element_present_ok',
+        args => 1,
     },
     verifyText => {
         func => 'text_is',
+        args => 2,
     },
     assertText => {
         func => 'text_is',
+        args => 2,
     },
     waitForElementPresent => {
         wait => 1,
         func => 'is_element_present',
+        args => 1,
     },
     waitForTextPresent => {
         wait => 1,
         func => 'is_text_present',
+        args => 1,
     },
 );
 
@@ -135,10 +154,13 @@ sub turn_func_into_perl {
             $line = $code->{test}.'($sel->'.$code->{func}.', '.(shift @args).');';
         } else {
             $line = '$sel->'.$code->{func}.'(';
-            if ( $code->{args} ) {
-                $line .= join(', ', map { quote($_) } @{ $code->{args} });
+            if ( $code->{force_args} ) {
+                $line .= join(', ', map { quote($_) } @{ $code->{force_args} });
             } else {
-                $line .= join(', ', map { quote($_) } grep { $_ ne '' } @args)
+                if ( defined $code->{args} ) {
+                    @args = map { defined $args[$_] ? $args[$_] : '' } (0..$code->{args}-1);
+                }
+                $line .= join(', ', map { quote($_) } @args)
             }
             $line .= ');';
         }
