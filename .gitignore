@@ -1,0 +1,9 @@
+.DS_Store
+*~
+*.swp
+*.swo
+*.pyc
+*.log
+*.db
+*.pid
+config_local.pl
