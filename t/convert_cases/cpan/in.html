@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head profile="http://selenium-ide.openqa.org/profiles/test-case">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<link rel="selenium.base" href="http://www.google.co.jp/" />
+<link rel="selenium.base" href="http://www.yahoo.co.jp/" />
 <title>cpan</title>
 </head>
 <body>
@@ -18,37 +18,27 @@
 </tr>
 <tr>
 	<td>assertTitle</td>
-	<td>Google</td>
-	<td></td>
-</tr>
-<tr>
-	<td>click</td>
-	<td>//input[@value='Google 検索' and @type='button']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForPageToLoad</td>
-	<td>30000</td>
+	<td>Yahoo! JAPAN</td>
 	<td></td>
 </tr>
 <tr>
 	<td>type</td>
-	<td>q</td>
+	<td>srchtxt</td>
 	<td>cpan</td>
 </tr>
 <tr>
+	<td>clickAndWait</td>
+	<td>srchbtn</td>
+	<td></td>
+</tr>
+<tr>
 	<td>assertTitle</td>
-	<td>cpan - Google 検索</td>
+	<td>「cpan」の検索結果 - Yahoo!検索</td>
 	<td></td>
 </tr>
 <tr>
-	<td>click</td>
-	<td>//div[@id='ires']/ol/li[1]/h3/a/em</td>
-	<td></td>
-</tr>
-<tr>
-	<td>waitForPageToLoad</td>
-	<td>30000</td>
+	<td>clickAndWait</td>
+	<td>//div[@id='WS2m']/ul/li[1]/div[1]/h3/a/b</td>
 	<td></td>
 </tr>
 <tr>

@@ -10,15 +10,15 @@ use utf8;
 my $sel = Test::WWW::Selenium->new( host => "localhost",
                                     port => 4444,
                                     browser => "*firefox",
-                                    browser_url => "http://www.google.co.jp/" );
+                                    browser_url => "http://www.yahoo.co.jp/" );
 
 $sel->open_ok("/");
-$sel->title_is("Google");
-$sel->click_ok("//input[\@value='Google 検索' and \@type='button']");
+$sel->title_is("Yahoo! JAPAN");
+$sel->type_ok("srchtxt", "cpan");
+$sel->click_ok("srchbtn");
 $sel->wait_for_page_to_load_ok("30000");
-$sel->type_ok("q", "cpan");
-$sel->title_is("cpan - Google 検索");
-$sel->click_ok("//div[\@id='ires']/ol/li[1]/h3/a/em");
+$sel->title_is("「cpan」の検索結果 - Yahoo!検索");
+$sel->click_ok("//div[\@id='WS2m']/ul/li[1]/div[1]/h3/a/b");
 $sel->wait_for_page_to_load_ok("30000");
 $sel->title_is("CPAN");
 $sel->click_ok("link=Perl modules");
