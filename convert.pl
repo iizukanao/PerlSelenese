@@ -5,8 +5,6 @@ use strict;
 use warnings;
 use HTML::TreeBuilder;
 use Text::MicroTemplate qw/:all/;
-use Scalar::Util;
-use Data::Dumper;
 
 my %command_map = (
     open => {
@@ -160,6 +158,7 @@ sub turn_func_into_perl {
                 if ( defined $code->{args} ) {
                     @args = map { defined $args[$_] ? $args[$_] : '' } (0..$code->{args}-1);
                 }
+                map { s/^exact:// } @args;
                 $line .= join(', ', map { quote($_) } @args)
             }
             $line .= ');';
@@ -189,10 +188,8 @@ EOF
 sub quote {
     my $str = shift;
 
-#    unless ( Scalar::Util::looks_like_number($str) ) {
     $str =~ s,<br />,\\n,g;
     $str =~ s/\Q$_\E/\\$_/g for qw(" % @ $);
     $str = '"'.$str.'"';
-#    }
     return $str;
 }
