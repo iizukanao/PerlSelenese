@@ -4,6 +4,7 @@ all_from 'lib/WWW/Selenium/Selenese.pm';
 
 requires 'HTML::TreeBuilder';
 requires 'Text::MicroTemplate';
+requires 'Time::HiRes';
 
 tests 't/*.t';
 author_tests 'xt';
