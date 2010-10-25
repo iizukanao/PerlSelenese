@@ -7,3 +7,28 @@ $ perl convert.pl <Seleneseファイル名>
 1. Selenium IDEでテストケースをHTML出力したもの(Selenese)と
    同じフォーマットのファイルを用意する。
 2. convert.plでHTMLをPerlスクリプトに変換する。
+
+---
+
+This is Perl module WWW::Selenium::Selenese.
+
+INSTALLATION
+
+Download it, unpack it, then build it as per the usual:
+
+    % perl Makefile.PL
+    % make && make test
+
+Then install it:
+
+    % make install
+
+DOCUMENTATION
+
+WWW::Selenium::Selenese documentation is available as in POD. So you can do:
+
+    % perldoc WWW::Selenium::Selenese
+
+to read the documentation online with your favorite pager.
+
+Nao Iizuka

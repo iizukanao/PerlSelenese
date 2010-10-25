@@ -7,3 +7,11 @@
 *.db
 *.pid
 config_local.pl
+cover_db
+META.yml
+Makefile
+blib
+inc
+pm_to_blib
+MANIFEST
+Makefile.old
