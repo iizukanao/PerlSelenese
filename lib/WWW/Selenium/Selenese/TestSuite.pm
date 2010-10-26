@@ -20,9 +20,11 @@ sub bulk_convert_suite {
 sub bulk_convert {
     my $self = shift;
 
+    my @outfiles;
     foreach my $case (@{ $self->{cases} }) {
-        $case->convert_to_perl;
+        push(@outfiles, $case->convert_to_perl);
     }
+    return @outfiles;
 }
 
 sub new {
@@ -62,10 +64,16 @@ sub parse {
         foreach my $tr ( $tbody->find('tr') ) {
             my $link = $tr->find('td')->find('a');
             if ($link) {
-                my $case = WWW::Selenium::Selenese::TestCase->new(
-                    $base_dir . '/' . $link->attr('href')
-                );
-                push(@cases, $case);
+                my $case;
+                eval {
+                    $case = WWW::Selenium::Selenese::TestCase->new(
+                        $base_dir . '/' . $link->attr('href')
+                    );
+                };
+                if ($@) {
+                    warn "Can't read test case $base_dir/".$link->attr('href').": $!\n";
+                }
+                push(@cases, $case) if $case;
             }
         }
     }
