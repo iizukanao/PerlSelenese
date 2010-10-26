@@ -1,4 +1,10 @@
-use lib '../lib';
+#!/usr/bin/perl
+use strict;
+use warnings;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 use WWW::Selenium::Selenese::TestSuite qw/bulk_convert_suite/;
 
-bulk_convert_suite('../t/convert_suites/1/TestSuite');
+my $srcfile = shift or die "Usage: $0 <HTML test suite>\n";
+
+bulk_convert_suite($srcfile);
