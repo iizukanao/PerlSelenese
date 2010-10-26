@@ -5,7 +5,7 @@ use 5.008_001;
 our $VERSION = '0.01';
 
 require Exporter;
-our @EXPORT_OK = qw(bulk_convert_suite);
+our @EXPORT_OK = qw(bulk_convert_suite is_suite_file get_cases get_case_files);
 *import = \&Exporter::import;
 
 use Carp ();
@@ -13,10 +13,26 @@ use HTML::TreeBuilder;
 use WWW::Selenium::Selenese::TestCase;
 use File::Basename;
 
+# Convert test cases inside the specified suite file
 sub bulk_convert_suite {
     __PACKAGE__->new(shift)->bulk_convert;
 }
 
+# Return whether the specified file is a test suite or not
+# static method
+sub is_suite_file {
+    my ($filename) = @_;
+
+    die "Can't read $filename" unless -r $filename;
+
+    my $tree = HTML::TreeBuilder->new;
+    $tree->parse_file($filename);
+
+    my $table = $tree->look_down('id', 'suiteTable');
+    return !! $table;
+}
+
+# Bulk convert test cases in this suite
 sub bulk_convert {
     my $self = shift;
 
@@ -25,6 +41,24 @@ sub bulk_convert {
         push(@outfiles, $case->convert_to_perl);
     }
     return @outfiles;
+}
+
+# Return TestCase objects in the specified suite
+sub get_cases {
+    __PACKAGE__->new(shift)->cases;
+}
+
+# Return test case filenames in the specified suite
+sub get_case_files {
+    map { $_->{filename} } __PACKAGE__->new(shift)->cases;
+}
+
+# Return TestCase objects
+# In list context, it returns array. In scalar context, it returns array reference.
+sub cases {
+    my $self = shift;
+
+    return wantarray ? @{ $self->{cases} } : $self->{cases};
 }
 
 sub new {
