@@ -2,9 +2,9 @@ use inc::Module::Install;
 name 'WWW-Selenium-Selenese';
 all_from 'lib/WWW/Selenium/Selenese.pm';
 
+requires 'Test::WWW::Selenium';
 requires 'HTML::TreeBuilder';
 requires 'Text::MicroTemplate';
-requires 'Time::HiRes';
 
 tests 't/*.t';
 author_tests 'xt';
