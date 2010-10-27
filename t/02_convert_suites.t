@@ -4,13 +4,10 @@ use WWW::Selenium::Selenese::TestSuite qw/bulk_convert_suite/;
 
 plan tests => 2;
 
-chdir("$FindBin::Bin/../");
-
-opendir(DIR, 't/convert_suites');
-my @dirs = grep { /^[^.]/ } readdir(DIR);
+my $suites_dir = "$FindBin::Bin/convert_suites";
+opendir(DIR, $suites_dir) or die $!;
+my @dirs = grep { /^[^.]/ && -d "$suites_dir/$_" } readdir(DIR);
 closedir(DIR);
-
-my $suites_dir = "$FindBin::Bin/../t/convert_suites";
 
 foreach my $dir (@dirs) {
     bulk_convert_suite("$suites_dir/$dir/suite.html");

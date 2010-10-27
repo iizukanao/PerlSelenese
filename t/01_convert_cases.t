@@ -4,20 +4,15 @@ use WWW::Selenium::Selenese::TestCase qw/case_to_perl/;
 
 plan tests => 2;
 
-chdir("$FindBin::Bin/../");
-
-opendir(DIR, 't/convert_cases');
-my @dirs = grep { /^[^.]/ } readdir(DIR);
+my $case_dir = "$FindBin::Bin/convert_cases";
+opendir(DIR, $case_dir) or die $!;
+my @dirs = grep { /^[^.]/ && -d "$case_dir/$_" } readdir(DIR);
 closedir(DIR);
 
-my $tmpfile = 't/tmp_out.pl';
-
 foreach my $dir (@dirs) {
-    my $got = case_to_perl("t/convert_cases/$dir/in.html");
-    open my $io, '<', "t/convert_cases/$dir/out.pl" or die $!;
+    my $got = case_to_perl("$case_dir/$dir/in.html");
+    open my $io, '<', "$case_dir/$dir/out.pl" or die $!;
     my $expected = join('', <$io>);
     close $io;
     is( $got, $expected, 'output precisely' );
 }
-
-unlink $tmpfile;
