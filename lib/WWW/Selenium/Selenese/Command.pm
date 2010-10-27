@@ -5,55 +5,50 @@ use 5.008_001;
 our $VERSION = '0.01';
 
 require Exporter;
-our @EXPORT_OK = qw(get_sentence);
+our @EXPORT_OK = qw(values_to_perl);
 *import = \&Exporter::import;
 
 use Carp ();
 use HTML::TreeBuilder;
 use WWW::Selenium::Selenese::TestCase;
 
-# HTML上のコマンド名とPerlのメソッド名の対応表
+# conversion table for Selenese commands and Perl methods
 my %command_map = (
-    open => {  # HTMLでのコマンド名
-        func => 'open_ok',  # Perlでのメソッド名
-        args => 1,          # メソッドが取る引数の数
+    # opens a page using a URL.
+    open => {  # Selenese command name
+        func => 'open_ok',  # method name in Test::WWW::Selenium
+        args => 1,          # number of arguments to pass
     },
-    assertTitle => {
-        func => 'title_is',
-        args => 1,
-    },
-    verifyTitle => {
-        func => 'title_is',
-        args => 1,
-    },
-    type => {
-        func => 'type_ok',
-        args => 2,
-    },
+
+    # performs a click operation, and optionally waits for a new page to load.
     click => {
         func => 'click_ok',
         args => 1,
     },
-    select => {
-        func => 'select_ok',
-        args => 2,
-    },
     clickAndWait => {
-        func => [
+        func => [  # combination of methods
             {
                 func => 'click_ok',
                 args => 1,
             },
             {
                 func => 'wait_for_page_to_load_ok',
-                force_args => [ 30000 ],
+                force_args => [ 30000 ],  # force arguments to pass
             },
         ],
     },
-    waitForPageToLoad => {
-        func   => 'wait_for_page_to_load_ok',
+
+    # verifies an expected page title.
+    verifyTitle => {
+        func => 'title_is',
         args => 1,
     },
+    assertTitle => {
+        func => 'title_is',
+        args => 1,
+    },
+
+    # verifies expected text is somewhere on the page.
     verifyTextPresent => {
         func => 'is_text_present_ok',
         args => 1,
@@ -62,14 +57,18 @@ my %command_map = (
         func => 'is_text_present_ok',
         args => 1,
     },
-    assertElementPresent => {
-        func => 'is_element_present_ok',
-        args => 1,
-    },
+
+    # verifies an expected UI element, as defined by its HTML tag, is present on the page.
     verifyElementPresent => {
         func => 'is_element_present_ok',
         args => 1,
     },
+    assertElementPresent => {
+        func => 'is_element_present_ok',
+        args => 1,
+    },
+
+    # verifies expected text and it's corresponding HTML tag are present on the page.
     verifyText => {
         func => 'text_is',
         args => 2,
@@ -78,20 +77,77 @@ my %command_map = (
         func => 'text_is',
         args => 2,
     },
+
+    # verifies a table's expected contents.
+    verifyTable => {
+        func => 'table_is',
+        args => 2,
+    },
+    assertTable => {
+        func => 'table_is',
+        args => 2,
+    },
+
+    # pauses execution until an expected new page loads.
+    # called automatically when clickAndWait is used.
+    waitForPageToLoad => {
+        func   => 'wait_for_page_to_load_ok',
+        args => 1,
+    },
+
+    # pauses execution until an expected UI element,
+    # as defined by its HTML tag, is present on the page.
     waitForElementPresent => {
-        wait => 1,
+        wait => 1,  # use WAIT structure
         func => 'is_element_present',
         args => 1,
     },
+
+    # store text in the variable.
+    storeText => {
+        args  => 1,
+        store => 1,
+        func  => 'get_text',
+    },
+    storeTextPresent => {
+        args  => 1,
+        store => 1,  # store value in variable
+        func  => 'is_text_present',
+    },
+    storeElementPresent => {
+        args  => 1,
+        store => 1,
+        func  => 'is_element_present',
+    },
+    storeTitle => {
+        args  => 0,
+        store => 1,
+        func  => 'get_title',
+    },
+
+    # miscellaneous commands
     waitForTextPresent => {
         wait => 1,
         func => 'is_text_present',
         args => 1,
     },
+
+    # type text in the field.
+    type => {
+        func => 'type_ok',
+        args => 2,
+    },
+
+    # select option from the <select> element.
+    select => {
+        func => 'select_ok',
+        args => 2,
+    },
 );
 
-sub get_sentence {
-    __PACKAGE__->new(shift)->sentence;
+# translate values to Perl code
+sub values_to_perl {
+    __PACKAGE__->new(shift)->as_perl;
 }
 
 sub new {
@@ -102,7 +158,7 @@ sub new {
 }
 
 # 3つの値からなるコマンドをPerlスクリプトに変換して返す
-sub sentence {
+sub as_perl {
     my $self = shift;
 
     my $line;
@@ -110,10 +166,10 @@ sub sentence {
     my @args = @{ $self->{values} };
     shift @args;
     if ($code) {
-        $line .= turn_func_into_perl($code, @args);
+        $line = turn_func_into_perl($code, @args);
     }
     if ($line) {
-        return $line;
+        return $line."\n";
     } else {
         return undef;
     }
@@ -131,21 +187,14 @@ sub turn_func_into_perl {
         }
     } else { # 単一のPerl文で構成される場合
         if ( $code->{test} ) { # testパラメータがある場合はそれを関数として呼ぶ
-            $line = $code->{test}.'($sel->'.$code->{func}.', '.(shift @args).');';
+            $line = $code->{test}.'($sel->'.$code->{func}.', '.make_args($code, @args).');';
+        } elsif ( $code->{store} ) { # 変数に代入する場合
+            my $varname = pop @args;
+            $line = "my \$$varname = \$sel->".$code->{func}.'('
+                    . make_args($code, @args).');';
         } else { # $selオブジェクトのメソッドを呼ぶ
-            $line = '$sel->'.$code->{func}.'(';
-            if ( $code->{force_args} ) { # 引数が強制的に指定される場合
-                $line .= join(', ', map { quote($_) } @{ $code->{force_args} });
-            } else {
-                if ( defined $code->{args} ) { # 引数の個数が指定されている場合
-                    @args = map { defined $args[$_] ? $args[$_] : '' } (0..$code->{args}-1);
-                }
-                # 値の先頭の exact: を削除
-                map { s/^exact:// } @args;
-                # 引数をカンマで結合する
-                $line .= join(', ', map { quote($_) } @args)
-            }
-            $line .= ');';
+            $line = '$sel->'.$code->{func}.'('
+                    . make_args($code, @args).');';
         }
         if ( $code->{repeat} ) { # 繰り返しがある場合は行を複製
             my @lines;
@@ -167,6 +216,26 @@ EOF
         }
     }
     return $line;
+}
+
+# メソッドの引数を作って返す
+sub make_args {
+    my ($code, @args) = @_;
+
+    my $str = '';
+    if ( $code->{force_args} ) { # 引数が強制的に指定される場合
+        $str .= join(', ', map { quote($_) } @{ $code->{force_args} });
+    } else {
+        if ( defined $code->{args} ) { # 引数の個数が指定されている場合
+            @args = map { defined $args[$_] ? $args[$_] : '' } (0..$code->{args}-1);
+        }
+        # 値の先頭の exact: を削除
+        map { s/^exact:// } @args;
+        # 引数をカンマで結合する
+        $str .= join(', ', map { quote($_) } @args);
+    }
+
+    return $str;
 }
 
 # エスケープした上でダブルクオーテーションで囲った文字列を返す

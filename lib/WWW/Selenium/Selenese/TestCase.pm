@@ -76,25 +76,18 @@ sub parse {
     $tree = $tree->delete;
 }
 
-sub sentences {
-    my $self = shift;
-
-    my @sentences;
-    foreach my $command (@{ $self->{commands} }) {
-        my $sentence = $command->sentence;
-        push(@sentences, $sentence) if $sentence;
-    }
-    return \@sentences;
-}
-
 sub as_perl {
     my $self = shift;
 
-    my $sentences_ref = $self->sentences;
-    my @sentences = map { Text::MicroTemplate::encoded_string($_) } @$sentences_ref;
+    my $perl_code = '';
+    foreach my $command (@{ $self->{commands} }) {
+        my $code = $command->as_perl;
+        $perl_code .= $code if defined $code;
+    }
+    chomp $perl_code;
 
     # テンプレートに渡すパラメータ
-    my @args = ( $self->{base_url}, \@sentences );
+    my @args = ( $self->{base_url}, Text::MicroTemplate::encoded_string($perl_code) );
 
     # test.mtをテンプレートとして読み込む
     open my $io, '<', File::Basename::dirname(__FILE__)."/test.mt" or die $!;

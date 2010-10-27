@@ -1,5 +1,5 @@
-? my $base_url = shift;
-? my $sentences = shift;
+? my $base_url  = shift;
+? my $perl_code = shift;
 #!/usr/bin/perl
 use strict;
 use warnings;
@@ -14,6 +14,4 @@ my $sel = Test::WWW::Selenium->new( host => "localhost",
                                     browser => "*firefox",
                                     browser_url => "<?= $base_url ?>" );
 
-? foreach my $sentence (@$sentences) {
-<?= $sentence ?>
-? }
+<?= $perl_code ?>
