@@ -6,5 +6,5 @@ $ENV{LANG} = 'C';
 all_pod_files_spelling_ok('lib');
 __DATA__
 Nao Iizuka
-iizuka@kyu-mu.net
+iizuka@cpan.org
 WWW::Selenium::Selenese

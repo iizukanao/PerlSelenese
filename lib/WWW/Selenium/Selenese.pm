@@ -21,7 +21,7 @@ WWW::Selenium::Selenese is
 
 =head1 AUTHOR
 
-Nao Iizuka E<lt>iizuka@kyu-mu.netE<gt>
+Nao Iizuka E<lt>iizuka@cpan.orgE<gt>
 
 =head1 SEE ALSO
 
